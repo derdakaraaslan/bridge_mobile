@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -13,107 +13,48 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+final values = [
+  "../assets/images/slideimage1.png",
+  "../assets/images/slideimage2.png",
+  "../assets/images/slideimage3.png",
+  "../assets/images/slideimage4.png"
+];
+int _index = 0;
+
 class _LoginState extends State<Login> {
+  late final Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      setState(() => _index++);
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _mailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+//sorun yok
+//sorun yok
+//sorun yok
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[100],
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (MediaQuery.of(context).size.width > 1200)
-              Container(
-                width: 600,
-                height: 600,
-                decoration: BoxDecoration(
-                    color: Colors.blueGrey[200],
-                    border: Border.all(color: Colors.grey)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 35),
-                        child: const Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Iaculis urna id volutpat lacus laoreet non curabitur. Sit amet cursus sit amet. Sed blandit libero volutpat sed cras ornare arcu dui vivamus. Id consectetur purus ut faucibus pulvinar elementum integer enim neque. Aliquet eget sit amet tellus cras adipiscing enim eu turpis. Massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Urna id volutpat lacus laoreet non curabitur gravida arcu. Et molestie ac feugiat sed lectus vestibulum mattis. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus. Phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam. Donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Consequat mauris nunc congue nisi vitae suscipit tellus. Feugiat nisl pretium fusce id velit. Felis donec et odio pellentesque diam volutpat commodo sed. Et magnis dis parturient montes nascetur ridiculus mus mauris vitae. Id neque aliquam vestibulum morbi blandit cursus. Nisi lacus sed viverra tellus in. Sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu.")),
-                  ],
-                ),
-              ),
-            Container(
-              width: 400,
-              height: 600,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey[200],
-                border: Border.all(color: Colors.grey),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Giriş Yap',
-                      ),
-                      const SizedBox(height: 15),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: _mailController,
-                              decoration: InputDecoration(
-                                labelText: "Şifre",
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            TextFormField(
-                              onFieldSubmitted: (_) => _onLoginButtonPressed(),
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                labelText: "Email",
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _onLoginButtonPressed,
-                          child: Text("GİRİŞ YAP"),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        child: Text("Kaydol"),
-                        onPressed: _onSignUpPressed,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      backgroundColor: Colors.blueGrey[50],
+      body: Container(
+        alignment: Alignment.center,
+        child:
+            //Menu(),
+            // MediaQuery.of(context).size.width >= 980
+            //     ? Menu()
+            //     : SizedBox(), // Responsive
+            Body(),
       ),
     );
   }
@@ -129,5 +70,200 @@ class _LoginState extends State<Login> {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
+  }
+}
+
+class Body extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (MediaQuery.of(context).size.width >= 1200) ...[
+                SizedBox(
+                  width: 360,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: Duration(milliseconds: 500),
+                        child: Image.asset(
+                          values[_index %
+                              values
+                                  .length], // manually change the text here, and hot reload
+                          key: UniqueKey(),
+                        ),
+                      ),
+                      const Text(
+                        'Hoşgeldin Gardaş',
+                        style: TextStyle(
+                          fontSize: 45,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 200,
+                ),
+              ],
+              // MediaQuery.of(context).size.width >= 1300 //Responsive
+              //     ? Image.asset(
+              //         'images/illustration-1.png',
+              //         width: 300,
+              //       )
+              //     : SizedBox(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 150),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SizedBox(
+                  width: 320,
+                  child: _formLogin(),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _formLogin() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Enter email or Phone number',
+            filled: true,
+            fillColor: Colors.blueGrey[50],
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.deepPurple[400]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        const SizedBox(height: 30),
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Password',
+            counterText: 'Forgot password?',
+            suffixIcon: const Icon(
+              Icons.visibility_off_outlined,
+              color: Colors.grey,
+            ),
+            filled: true,
+            fillColor: Colors.blueGrey[50],
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.deepPurple[400]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        const SizedBox(height: 40),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.deepPurple[100]!,
+                spreadRadius: 10,
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () => print("it's pressed"),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.deepPurple,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: const SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Center(child: Text("Giriş Yap"))),
+          ),
+        ),
+        const SizedBox(height: 40),
+        TextButton(
+          onPressed: _onSignUpButtpnPressed,
+          child: const Text("Hesabın yok mu? Hemen Kaydol",
+              style: TextStyle(color: Colors.deepPurple)),
+        ),
+      ],
+    );
+  }
+
+  _onSignUpButtpnPressed() {}
+  Widget _loginWithButton({String? image, bool isActive = false}) {
+    return Container(
+      width: 90,
+      height: 70,
+      decoration: isActive
+          ? BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[300]!,
+                  spreadRadius: 10,
+                  blurRadius: 30,
+                )
+              ],
+              borderRadius: BorderRadius.circular(15),
+            )
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.grey[400]!),
+            ),
+      child: Center(
+          child: Container(
+        decoration: isActive
+            ? BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(35),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[400]!,
+                    spreadRadius: 2,
+                    blurRadius: 15,
+                  )
+                ],
+              )
+            : const BoxDecoration(),
+        child: Image.asset(
+          '$image',
+          width: 35,
+        ),
+      )),
+    );
   }
 }
