@@ -23,7 +23,7 @@ class BridgeAppState extends State<BridgeApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Bridge Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
