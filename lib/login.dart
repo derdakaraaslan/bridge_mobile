@@ -6,7 +6,6 @@ import 'globals/desing.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'sign_up.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -29,10 +28,13 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _surnameController = TextEditingController();
-  final _mailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _mailControllerSignUp = TextEditingController();
+  final _passwordControllerSignUp = TextEditingController();
+  final _passwordControllerSignIn = TextEditingController();
+  final _mailControllerSignIn = TextEditingController();
   bool _isLogin = true;
   bool _isDisabled = false;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -137,6 +139,7 @@ class _LoginState extends State<Login> {
           ),
         ),
         TextField(
+          controller: _mailControllerSignIn,
           decoration: InputDecoration(
             hintText: 'E-mail',
             filled: true,
@@ -155,13 +158,21 @@ class _LoginState extends State<Login> {
         ),
         const SizedBox(height: 30),
         TextField(
+          obscureText: !_passwordVisible,
+          controller: _passwordControllerSignIn,
           decoration: InputDecoration(
             hintText: 'Şifre',
             counterText: 'Şifremi unuttum',
-            suffixIcon: const Icon(
-              Icons.visibility_off_outlined,
-              color: Colors.grey,
-            ),
+            suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: BridgeColors.primaryColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                }),
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: const TextStyle(fontSize: 12),
@@ -183,7 +194,7 @@ class _LoginState extends State<Login> {
             borderRadius: BorderRadius.circular(30),
           ),
           child: ElevatedButton(
-            onPressed: () => print("it's pressed"),
+            onPressed: _onSignInButtonPressed,
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: BridgeColors.primaryColor,
@@ -261,8 +272,8 @@ class _LoginState extends State<Login> {
           ),
         ),
         const SizedBox(height: 15),
-        TextField(
-          controller: _mailController,
+        TextFormField(
+          controller: _mailControllerSignUp,
           decoration: InputDecoration(
             hintText: 'E-mail',
             filled: true,
@@ -281,9 +292,19 @@ class _LoginState extends State<Login> {
         ),
         const SizedBox(height: 15),
         TextField(
-          controller: _passwordController,
+          controller: _passwordControllerSignUp,
           decoration: InputDecoration(
             hintText: 'Şifre',
+            suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: BridgeColors.primaryColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                }),
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: const TextStyle(fontSize: 12),
@@ -303,7 +324,7 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Checkbox(
-              shape: CircleBorder(),
+              shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: BridgeColors.primaryColor,
               value: _isDisabled,
@@ -353,29 +374,54 @@ class _LoginState extends State<Login> {
     });
   }
 
-  _onSignUpButtonPressed() async {
-    final url = "http://localhost:8000/app_users";
+  _onSignInButtonPressed() {
+    const url = "http://localhost:8000/login/app_user";
     try {
-      Fluttertoast.showToast(
-          msg: "This is Center Short Toast",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      var response = await http.post(
+      http
+          .post(
+        Uri.parse(url),
+        body: jsonEncode(<String, String>{
+          'email': _mailControllerSignIn.text,
+          'password': _passwordControllerSignIn.text,
+        }),
+      )
+          .then((value) {
+        if (value.statusCode == 200) {
+          BridgeToast.showSuccessToastMessage("Giriş başarılı");
+        } else {
+          BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");
+        }
+      });
+    } catch (e) {
+      BridgeToast.showErrorToastMessage("Bir hata oluştu, kayıt başarısız.");
+    }
+  }
+
+  _onSignUpButtonPressed() {
+    const url = "http://localhost:8000/app_users";
+    try {
+      http
+          .post(
         Uri.parse(url),
         body: jsonEncode(<String, String>{
           'first_name': _nameController.text,
           'last_name': _surnameController.text,
-          'email': _mailController.text,
+          'email': _mailControllerSignUp.text,
           'is_disabled': _isDisabled.toString(),
-          'password': _passwordController.text,
+          'password': _passwordControllerSignUp.text,
         }),
-      );
+      )
+          .then((value) {
+        if (value.statusCode == 200) {
+          BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
+        } else if (value.statusCode == 400) {
+          BridgeToast.showWarningToastMessage("Bu mail adresi zaten kayıtlı.");
+        } else {
+          BridgeToast.showErrorToastMessage(value.body);
+        }
+      });
     } catch (e) {
-      print(e);
+      BridgeToast.showErrorToastMessage("Bir hata oluştu, kayıt başarısız.");
     }
   }
 }
