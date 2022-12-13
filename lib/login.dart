@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'dart:math';
+import 'globals/desing.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'sign_up.dart';
 
 class Login extends StatefulWidget {
@@ -26,7 +24,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() => _index++);
     });
   }
@@ -76,68 +74,62 @@ class _LoginState extends State<Login> {
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (MediaQuery.of(context).size.width >= 1200) ...[
-                SizedBox(
-                  width: 360,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AnimatedSwitcher(
-                        duration: Duration(milliseconds: 500),
-                        child: Image.asset(
-                          values[_index %
-                              values
-                                  .length], // manually change the text here, and hot reload
-                          key: UniqueKey(),
-                        ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (MediaQuery.of(context).size.width >= 1200) ...[
+              SizedBox(
+                width: 360,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: Image.asset(
+                        values[_index %
+                            values
+                                .length], // manually change the text here, and hot reload
+                        key: UniqueKey(),
                       ),
-                      const Text(
-                        'Hoşgeldin Gardaş',
-                        style: TextStyle(
-                          fontSize: 45,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const Text(
+                      'Hoşgeldin',
+                      style: TextStyle(
+                        fontSize: 45,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-                const SizedBox(
-                  width: 200,
-                ),
-              ],
-              // MediaQuery.of(context).size.width >= 1300 //Responsive
-              //     ? Image.asset(
-              //         'images/illustration-1.png',
-              //         width: 300,
-              //       )
-              //     : SizedBox(),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 150),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.deepPurple),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SizedBox(
-                  width: 320,
-                  child: _formLogin(),
-                ),
-              )
+              ),
+              const SizedBox(
+                width: 200,
+              ),
             ],
-          ),
-        ],
-      ),
+            // MediaQuery.of(context).size.width >= 1300 //Responsive
+            //     ? Image.asset(
+            //         'images/illustration-1.png',
+            //         width: 300,
+            //       )
+            //     : SizedBox(),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
+              decoration: BoxDecoration(
+                border: Border.all(color: BridgeColors.secondaryColor),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SizedBox(
+                width: 320,
+                child: _formLogin(),
+              ),
+            )
+          ],
+        ),
+      ],
     );
   }
 
@@ -153,11 +145,11 @@ class Body extends StatelessWidget {
             labelStyle: const TextStyle(fontSize: 12),
             contentPadding: const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.grey),
               borderRadius: BorderRadius.circular(15),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepPurple[400]!),
+              borderSide: BorderSide(color: BridgeColors.secondaryColor),
               borderRadius: BorderRadius.circular(15),
             ),
           ),
@@ -176,11 +168,11 @@ class Body extends StatelessWidget {
             labelStyle: const TextStyle(fontSize: 12),
             contentPadding: const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.grey),
               borderRadius: BorderRadius.circular(15),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepPurple[400]!),
+              borderSide: BorderSide(color: BridgeColors.secondaryColor),
               borderRadius: BorderRadius.circular(15),
             ),
           ),
@@ -190,19 +182,12 @@ class Body extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.deepPurple[100]!,
-                spreadRadius: 10,
-                blurRadius: 20,
-              ),
-            ],
           ),
           child: ElevatedButton(
             onPressed: () => print("it's pressed"),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: BridgeColors.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -216,8 +201,8 @@ class Body extends StatelessWidget {
         const SizedBox(height: 40),
         TextButton(
           onPressed: _onSignUpButtpnPressed,
-          child: const Text("Hesabın yok mu? Hemen Kaydol",
-              style: TextStyle(color: Colors.deepPurple)),
+          child: Text("Hesabın yok mu? Hemen Kaydol",
+              style: TextStyle(color: BridgeColors.primaryColor)),
         ),
       ],
     );
