@@ -323,7 +323,7 @@ class _LoginState extends State<Login> {
             borderRadius: BorderRadius.circular(30),
           ),
           child: ElevatedButton(
-            onPressed: () => print("it's pressed"),
+            onPressed: _onSignUpButtonPressed,
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: BridgeColors.primaryColor,
@@ -354,7 +354,7 @@ class _LoginState extends State<Login> {
   }
 
   _onSignUpButtonPressed() async {
-    final url = "http://localhost:8000/appusers";
+    final url = "http://localhost:8000/app_users";
     try {
       Fluttertoast.showToast(
           msg: "This is Center Short Toast",
