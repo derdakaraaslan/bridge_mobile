@@ -5,6 +5,8 @@ import 'globals/storage.dart' as storage;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
+import 'routes.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -385,25 +387,24 @@ class _LoginState extends State<Login> {
           'password': _passwordControllerSignIn.text,
         }),
       )
-          .then((value) async {
+          .then((value) {
         if (value.statusCode == 200) {
           var responseBody = jsonDecode(value.body);
 
           BridgeToast.showSuccessToastMessage("Giriş başarılı");
-          storage.Storage.prefs = await storage.Storage.cratePref();
-          storage.Storage.setUser(
-            responseBody["id"],
-            responseBody["first_name"],
-            responseBody["last_name"],
-            responseBody["email"],
-            responseBody["is_disabled"],
-            storage.Storage.prefs!,
-          );
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Home()),
-          );
+          storage.Storage.cratePref().then((value) {
+            storage.Storage.prefs = value;
+            storage.Storage.setUser(
+              responseBody["id"],
+              responseBody["first_name"],
+              responseBody["last_name"],
+              responseBody["email"],
+              responseBody["is_disabled"],
+              storage.Storage.prefs!,
+            ).then((value) {
+              context.go(Routes.home);
+            });
+          });
         } else {
           BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");
         }

@@ -6,13 +6,14 @@ class Storage {
     return SharedPreferences.getInstance();
   }
 
-  static setUser(String id, String firstName, String lastName, String email,
-      bool isDisabled, SharedPreferences prefs) async {
+  static Future<bool> setUser(String id, String firstName, String lastName,
+      String email, bool isDisabled, SharedPreferences prefs) async {
     await prefs.setString("id", id);
     await prefs.setString('firstName', firstName);
     await prefs.setString('lastName', lastName);
     await prefs.setString('email', email);
     await prefs.setBool('isDisabled', isDisabled);
+    return true;
   }
 
   static String? getFirstName(SharedPreferences prefs) {

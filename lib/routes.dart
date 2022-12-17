@@ -8,6 +8,7 @@ import 'home.dart';
 // ignore: long-method
 GoRouter routerGenerator() {
   return GoRouter(
+    initialLocation: Routes.login,
     routes: [
       GoRoute(
         path: Routes.home,
@@ -16,12 +17,28 @@ GoRouter routerGenerator() {
           child: Home(),
         ),
       ),
+      GoRoute(
+        path: Routes.login,
+        name: 'Login',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: Login(),
+        ),
+      ),
+      GoRoute(
+        path: Routes.start,
+        name: 'Login2',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: Login(),
+        ),
+      ),
     ],
   );
 }
 
 abstract class Routes {
   static const home = '/home';
+  static const login = '/login';
+  static const start = '/';
 }
 
 extension GoRouterExtensions on BuildContext {
