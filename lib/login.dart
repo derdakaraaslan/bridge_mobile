@@ -1,8 +1,7 @@
 import 'dart:convert';
-
-import 'package:fluttertoast/fluttertoast.dart';
-
+import 'home.dart';
 import 'globals/desing.dart';
+import 'globals/storage.dart' as storage;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -292,6 +291,7 @@ class _LoginState extends State<Login> {
         ),
         const SizedBox(height: 15),
         TextField(
+          obscureText: !_passwordVisible,
           controller: _passwordControllerSignUp,
           decoration: InputDecoration(
             hintText: 'Şifre',
@@ -385,9 +385,25 @@ class _LoginState extends State<Login> {
           'password': _passwordControllerSignIn.text,
         }),
       )
-          .then((value) {
+          .then((value) async {
         if (value.statusCode == 200) {
+          var responseBody = jsonDecode(value.body);
+
           BridgeToast.showSuccessToastMessage("Giriş başarılı");
+          storage.Storage.prefs = await storage.Storage.cratePref();
+          storage.Storage.setUser(
+            responseBody["id"],
+            responseBody["first_name"],
+            responseBody["last_name"],
+            responseBody["email"],
+            responseBody["is_disabled"],
+            storage.Storage.prefs!,
+          );
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Home()),
+          );
         } else {
           BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");
         }
@@ -397,12 +413,14 @@ class _LoginState extends State<Login> {
     }
   }
 
-  _onSignUpButtonPressed() {
-    const url = "http://localhost:8000/app_users";
+  _onSignUpButtonPressed() async {
+    const url = "http://192.168.1.39:8000/app_users";
+    var client = http.Client();
+    var uri = Uri.http('192.168.1.39:8000', 'app_users');
     try {
-      http
+      client
           .post(
-        Uri.parse(url),
+        uri,
         body: jsonEncode(<String, String>{
           'first_name': _nameController.text,
           'last_name': _surnameController.text,
@@ -414,6 +432,14 @@ class _LoginState extends State<Login> {
           .then((value) {
         if (value.statusCode == 200) {
           BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
+          setState(() {
+            _nameController.text = "";
+            _surnameController.text = "";
+            _mailControllerSignUp.text = "";
+            _isDisabled = false;
+            _passwordControllerSignUp.text = "";
+            _isLogin = true;
+          });
         } else if (value.statusCode == 400) {
           BridgeToast.showWarningToastMessage("Bu mail adresi zaten kayıtlı.");
         } else {
