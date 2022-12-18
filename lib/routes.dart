@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import 'globals/simple_storage.dart';
 import 'login.dart';
 import 'home.dart';
+import 'coming_soon.dart';
+import 'pagenotfound.dart';
 
 // ignore: long-method
 GoRouter routerGenerator() {
+  final _storageService = GetIt.I.get<SimpleStorage>();
   return GoRouter(
     initialLocation: Routes.login,
+    errorBuilder: (context, state) => const PageNotFound(),
     routes: [
       GoRoute(
         path: Routes.home,
         name: 'Home',
-        pageBuilder: (_, __) => const NoTransitionPage(
-          child: Home(),
+        pageBuilder: (_, __) => NoTransitionPage(
+          child: (_storageService.id != null) ? Home() : Login(),
         ),
       ),
       GoRoute(
@@ -31,12 +36,20 @@ GoRouter routerGenerator() {
           child: Login(),
         ),
       ),
+      GoRoute(
+        path: Routes.comingSoon,
+        name: 'Coming Soon',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: ComingSoon(),
+        ),
+      ),
     ],
   );
 }
 
 abstract class Routes {
   static const home = '/home';
+  static const comingSoon = '/comingsoon';
   static const login = '/login';
   static const start = '/';
 }

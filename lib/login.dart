@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'home.dart';
+import 'package:get_it/get_it.dart';
+
 import 'globals/desing.dart';
-import 'globals/storage.dart' as storage;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
+import 'globals/simple_storage.dart';
 import 'routes.dart';
 
 class Login extends StatefulWidget {
@@ -17,6 +18,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   late final Timer timer;
+  final _storageService = GetIt.I.get<SimpleStorage>();
 
   final values = [
     "../assets/images/slideimage1.png",
@@ -387,24 +389,18 @@ class _LoginState extends State<Login> {
           'password': _passwordControllerSignIn.text,
         }),
       )
-          .then((value) {
+          .then((value) async {
         if (value.statusCode == 200) {
           var responseBody = jsonDecode(value.body);
 
+          _storageService.id = responseBody["id"];
+          _storageService.profilePhoto = responseBody["profile_photo"];
+          _storageService.firstName = responseBody["first_name"];
+          _storageService.lastName = responseBody["last_name"];
+          _storageService.email = responseBody["email"];
+          _storageService.isDisabled = responseBody["is_disabled"];
           BridgeToast.showSuccessToastMessage("Giriş başarılı");
-          storage.Storage.cratePref().then((value) {
-            storage.Storage.prefs = value;
-            storage.Storage.setUser(
-              responseBody["id"],
-              responseBody["first_name"],
-              responseBody["last_name"],
-              responseBody["email"],
-              responseBody["is_disabled"],
-              storage.Storage.prefs!,
-            ).then((value) {
-              context.go(Routes.home);
-            });
-          });
+          context.go(Routes.home);
         } else {
           BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");
         }

@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'globals/simple_storage.dart';
 import 'login.dart';
 import 'routes.dart';
 import 'package:oktoast/oktoast.dart';
 
 void main() async {
+  GetIt.I.registerSingletonAsync<SimpleStorage>(SimpleStorage.create);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const BridgeApp());
 }
 
