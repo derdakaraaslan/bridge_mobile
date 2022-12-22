@@ -72,7 +72,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 title: 'Ekipman Yardımı',
                 infoCount: 0,
                 clearDatas: false,
-                location: Routes.comingSoon,
+                location: Routes.equipment,
               ),
 
               CustomListTile(

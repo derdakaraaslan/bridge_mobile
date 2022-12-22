@@ -1,13 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sidebarx/sidebarx.dart';
+import 'globals/simple_storage.dart';
 import './drawer/custom_drawer.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'appbar/appbar.dart';
+import 'widgets/appbar.dart';
+import 'package:get_it/get_it.dart';
 
 class ComingSoon extends StatefulWidget {
   const ComingSoon({Key? key}) : super(key: key);
@@ -22,13 +17,19 @@ class _ComingSoonState extends State<ComingSoon> {
     return Scaffold(
       appBar: BridgeAppBar.appbar(context),
       backgroundColor: Colors.white,
-      drawer: !kIsWeb ? const CustomDrawer() : null,
-      body: Row(children: [
-        if (kIsWeb) ...[
-          const CustomDrawer(),
-        ],
-        SizedBox(
-            width: MediaQuery.of(context).size.width - 300,
+      drawer: MediaQuery.of(context).size.width < 1200
+          ? const CustomDrawer()
+          : null,
+      body: Row(
+        children: [
+          if (MediaQuery.of(context).size.width >= 1200) ...[
+            const CustomDrawer(),
+          ],
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: (MediaQuery.of(context).size.width >= 1200)
+                ? MediaQuery.of(context).size.width - 300
+                : MediaQuery.of(context).size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,10 +43,15 @@ class _ComingSoonState extends State<ComingSoon> {
                 const SizedBox(
                   height: 20,
                 ),
-                Image.asset("../assets/images/comingsoon.png", width: 500),
+                (MediaQuery.of(context).size.width >= 1200)
+                    ? Image.asset("../assets/images/comingsoon.png", width: 500)
+                    : Image.asset("../assets/images/comingsoon.png",
+                        width: 250),
               ],
-            )),
-      ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

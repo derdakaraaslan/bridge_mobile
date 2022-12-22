@@ -411,13 +411,11 @@ class _LoginState extends State<Login> {
   }
 
   _onSignUpButtonPressed() async {
-    const url = "http://192.168.1.39:8000/app_users";
-    var client = http.Client();
-    var uri = Uri.http('192.168.1.39:8000', 'app_users');
+    const url = "http://localhost:8000/app_users";
     try {
-      client
+      http
           .post(
-        uri,
+        Uri.parse(url),
         body: jsonEncode(<String, String>{
           'first_name': _nameController.text,
           'last_name': _surnameController.text,

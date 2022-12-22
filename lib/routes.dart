@@ -7,19 +7,30 @@ import 'login.dart';
 import 'home.dart';
 import 'coming_soon.dart';
 import 'pagenotfound.dart';
+import 'equipment.dart';
 
 // ignore: long-method
 GoRouter routerGenerator() {
   final _storageService = GetIt.I.get<SimpleStorage>();
+
   return GoRouter(
     initialLocation: Routes.login,
     errorBuilder: (context, state) => const PageNotFound(),
+    redirect: (_, state) {
+      final isOnLogin = state.location == Routes.login;
+      final isLoggedIn = _storageService.id != null;
+
+      if (!isOnLogin && !isLoggedIn) return Routes.login;
+      if (isOnLogin && isLoggedIn) return Routes.home;
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: Routes.home,
         name: 'Home',
-        pageBuilder: (_, __) => NoTransitionPage(
-          child: (_storageService.id != null) ? Home() : Login(),
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: Home(),
         ),
       ),
       GoRoute(
@@ -43,6 +54,13 @@ GoRouter routerGenerator() {
           child: ComingSoon(),
         ),
       ),
+      GoRoute(
+        path: Routes.equipment,
+        name: 'Equipment',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: Equipment(),
+        ),
+      ),
     ],
   );
 }
@@ -51,6 +69,7 @@ abstract class Routes {
   static const home = '/home';
   static const comingSoon = '/comingsoon';
   static const login = '/login';
+  static const equipment = '/equipment';
   static const start = '/';
 }
 

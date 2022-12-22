@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import './drawer/custom_drawer.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'routes.dart';
+import 'widgets/appbar.dart';
 
 class PageNotFound extends StatefulWidget {
   const PageNotFound({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _PageNotFoundState extends State<PageNotFound> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BridgeAppBar.appbar(context),
       backgroundColor: Colors.white,
       drawer: !kIsWeb ? const CustomDrawer() : null,
       body: Row(children: [
