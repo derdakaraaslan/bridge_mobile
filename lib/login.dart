@@ -1,10 +1,13 @@
 import 'dart:convert';
-import 'home.dart';
+import 'package:get_it/get_it.dart';
+
 import 'globals/desing.dart';
-import 'globals/storage.dart' as storage;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
+import 'globals/simple_storage.dart';
+import 'routes.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   late final Timer timer;
+  final _storageService = GetIt.I.get<SimpleStorage>();
 
   final values = [
     "../assets/images/slideimage1.png",
@@ -389,21 +393,14 @@ class _LoginState extends State<Login> {
         if (value.statusCode == 200) {
           var responseBody = jsonDecode(value.body);
 
+          _storageService.id = responseBody["id"];
+          _storageService.profilePhoto = responseBody["profile_photo"];
+          _storageService.firstName = responseBody["first_name"];
+          _storageService.lastName = responseBody["last_name"];
+          _storageService.email = responseBody["email"];
+          _storageService.isDisabled = responseBody["is_disabled"];
           BridgeToast.showSuccessToastMessage("Giriş başarılı");
-          storage.Storage.prefs = await storage.Storage.cratePref();
-          storage.Storage.setUser(
-            responseBody["id"],
-            responseBody["first_name"],
-            responseBody["last_name"],
-            responseBody["email"],
-            responseBody["is_disabled"],
-            storage.Storage.prefs!,
-          );
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Home()),
-          );
+          context.go(Routes.home);
         } else {
           BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");
         }
@@ -414,13 +411,11 @@ class _LoginState extends State<Login> {
   }
 
   _onSignUpButtonPressed() async {
-    const url = "http://192.168.1.39:8000/app_users";
-    var client = http.Client();
-    var uri = Uri.http('192.168.1.39:8000', 'app_users');
+    const url = "http://localhost:8000/app_users";
     try {
-      client
+      http
           .post(
-        uri,
+        Uri.parse(url),
         body: jsonEncode(<String, String>{
           'first_name': _nameController.text,
           'last_name': _surnameController.text,

@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sidebarx/sidebarx.dart';
-import 'globals/storage.dart' as storage;
+import 'globals/simple_storage.dart';
+import './drawer/custom_drawer.dart';
+import 'widgets/appbar.dart';
+import 'package:get_it/get_it.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,63 +12,136 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _formKey = GlobalKey<FormState>();
-  final _mailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _surnameController = TextEditingController();
-  bool _isDisabled = false;
-
+  final _storageService = GetIt.I.get<SimpleStorage>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          SidebarX(
-            controller: SidebarXController(selectedIndex: 0),
-            items: [
-              SidebarXItem(
-                  icon: Icons.home,
-                  label: storage.Storage.getFirstName(storage.Storage.prefs!)),
-              SidebarXItem(icon: Icons.search, label: 'Search'),
+      appBar: BridgeAppBar.appbar(context),
+      backgroundColor: Colors.white,
+      drawer: MediaQuery.of(context).size.width < 1200
+          ? const CustomDrawer()
+          : null,
+      body: Center(
+        child: Row(
+          mainAxisAlignment: (MediaQuery.of(context).size.width >= 1200)
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
+          children: [
+            if (MediaQuery.of(context).size.width >= 1200) ...[
+              const CustomDrawer(),
             ],
-          ),
-          // Your app screen body
-        ],
+            Container(
+              padding: (MediaQuery.of(context).size.width >= 900)
+                  ? const EdgeInsets.all(50.0)
+                  : const EdgeInsets.all(20.0),
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    (MediaQuery.of(context).size.width >= 900)
+                        ? Row(
+                            children: _getChildren(),
+                          )
+                        : Column(
+                            children: _getChildren(),
+                          ),
+                    Row(
+                      children: const [
+                        Text(
+                          "BURAYA YARDIM VERİLERE GELECEK\t\t",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  _onHomeButtonPressed() async {
-    final url = "http://localhost:8000/appusers";
-    try {
-      Fluttertoast.showToast(
-          msg: "This is Center Short Toast",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      var response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode(<String, String>{
-          'first_name': _nameController.text,
-          'last_name': _surnameController.text,
-          'email': _mailController.text,
-          'is_disabled': _isDisabled.toString(),
-          'password': _passwordController.text,
-        }),
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _onLogInButtonPressed() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Login()),
-    );
+  List<Widget> _getChildren() {
+    return [
+      _storageService.getProfilePhoto(width: 240),
+      const SizedBox(
+        width: 50,
+        height: 50,
+      ),
+      Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                "Adı Soyadı:\t\t",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Email:\t\t",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Bir engeli var mı?:\t\t",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${_storageService.firstName} ${_storageService.lastName}",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "${_storageService.email}",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                (_storageService.isDisabled == true) ? "Evet" : "Hayır",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
   }
 }
