@@ -43,18 +43,32 @@ class _EquipmentState extends State<Equipment> {
           if (MediaQuery.of(context).size.width >= 1200) ...[
             const CustomDrawer(),
           ],
-          SingleChildScrollView(
-            child: Container(
-              width: (MediaQuery.of(context).size.width >= 1200)
-                  ? MediaQuery.of(context).size.width - 300
-                  : MediaQuery.of(context).size.width,
-              padding: (MediaQuery.of(context).size.width >= 900)
-                  ? const EdgeInsets.all(50.0)
-                  : const EdgeInsets.all(20.0),
-              child: Column(
-                children: rows,
+          Stack(
+            children: [
+              Container(
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [Text("data")],
+                ),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.only(top: 100.0),
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: (MediaQuery.of(context).size.width >= 1200)
+                        ? MediaQuery.of(context).size.width - 300
+                        : MediaQuery.of(context).size.width,
+                    padding: (MediaQuery.of(context).size.width >= 900)
+                        ? const EdgeInsets.all(50.0)
+                        : const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: rows,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
