@@ -8,6 +8,7 @@ import 'home.dart';
 import 'coming_soon.dart';
 import 'pagenotfound.dart';
 import 'equipment.dart';
+import 'companion.dart';
 
 // ignore: long-method
 GoRouter routerGenerator() {
@@ -29,7 +30,7 @@ GoRouter routerGenerator() {
       GoRoute(
         path: Routes.home,
         name: 'Home',
-        pageBuilder: (_, __) => const NoTransitionPage(
+        pageBuilder: (_, __) => NoTransitionPage(
           child: Home(),
         ),
       ),
@@ -61,6 +62,13 @@ GoRouter routerGenerator() {
           child: Equipment(),
         ),
       ),
+      GoRoute(
+        path: Routes.companion,
+        name: 'Companion',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: Companion(),
+        ),
+      ),
     ],
   );
 }
@@ -70,6 +78,7 @@ abstract class Routes {
   static const comingSoon = '/comingsoon';
   static const login = '/login';
   static const equipment = '/equipment';
+  static const companion = '/companion';
   static const start = '/';
 }
 
