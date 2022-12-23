@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:get_it/get_it.dart';
-
 import 'globals/desing.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -8,6 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'globals/simple_storage.dart';
 import 'routes.dart';
+
+enum FormType {
+  signIn,
+  signUp,
+  forgotPassword,
+}
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -35,9 +40,10 @@ class _LoginState extends State<Login> {
   final _passwordControllerSignUp = TextEditingController();
   final _passwordControllerSignIn = TextEditingController();
   final _mailControllerSignIn = TextEditingController();
-  bool _isLogin = true;
+  final _mailControllerForgotPassword = TextEditingController();
   bool _isDisabled = false;
   bool _passwordVisible = false;
+  FormType _enumValue = FormType.signIn;
 
   @override
   void initState() {
@@ -114,7 +120,13 @@ class _LoginState extends State<Login> {
                   ),
                   child: SizedBox(
                     width: 300,
-                    child: _isLogin ? _formSignIn() : _formSignUp(),
+                    child: (_enumValue == FormType.signIn)
+                        ? _formSignIn()
+                        : (_enumValue == FormType.signUp)
+                            ? _formSignUp()
+                            : (_enumValue == FormType.forgotPassword)
+                                ? _formForgotPassword()
+                                : null,
                   ),
                 )
               ],
@@ -165,7 +177,6 @@ class _LoginState extends State<Login> {
           controller: _passwordControllerSignIn,
           decoration: InputDecoration(
             hintText: 'Şifre',
-            counterText: 'Şifremi unuttum',
             suffixIcon: IconButton(
                 icon: Icon(
                   _passwordVisible ? Icons.visibility : Icons.visibility_off,
@@ -213,10 +224,88 @@ class _LoginState extends State<Login> {
         ),
         const SizedBox(height: 20),
         TextButton(
-          onPressed: _changeForm,
-          child: Text("Hesabın yok mu? Hemen Kaydol",
+          onPressed: () {
+            _changeFormType(FormType.forgotPassword);
+          },
+          child: Text("Şifremi unuttum",
               style: TextStyle(color: BridgeColors.primaryColor)),
         ),
+        const SizedBox(height: 5),
+        TextButton(
+          onPressed: () {
+            _changeFormType(FormType.signUp);
+          },
+          child: Text("Hesabın yok mu? Hemen kaydol",
+              style: TextStyle(color: BridgeColors.primaryColor)),
+        ),
+      ],
+    );
+  }
+
+  Widget _formForgotPassword() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 50),
+            child: Text(
+              'Bridge',
+              style: TextStyle(
+                fontSize: 40,
+                color: BridgeColors.secondaryColor,
+              ),
+            ),
+          ),
+        ),
+        TextField(
+          controller: _mailControllerForgotPassword,
+          decoration: InputDecoration(
+            hintText: 'E-mail',
+            filled: true,
+            fillColor: Colors.blueGrey[50],
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: BridgeColors.secondaryColor),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        const SizedBox(height: 40),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: ElevatedButton(
+            onPressed: _onForgotPasswordButtonPressed,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: BridgeColors.primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: const SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Center(child: Text("Onayla"))),
+          ),
+        ),
+        const SizedBox(height: 20),
+        TextButton(
+          onPressed: () {
+            _changeFormType(FormType.signIn);
+          },
+          child: Text("Giriş yapmak için tıklayınız",
+              style: TextStyle(color: BridgeColors.primaryColor)),
+        ),
+        const SizedBox(height: 5),
       ],
     );
   }
@@ -364,7 +453,9 @@ class _LoginState extends State<Login> {
         ),
         const SizedBox(height: 20),
         TextButton(
-          onPressed: _changeForm,
+          onPressed: () {
+            _changeFormType(FormType.signIn);
+          },
           child: Text("Hesabın var mı? Giriş yap.",
               style: TextStyle(color: BridgeColors.primaryColor)),
         ),
@@ -372,9 +463,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  _changeForm() {
+  _changeFormType(FormType newType) {
     setState(() {
-      _isLogin = !_isLogin;
+      _enumValue = newType;
     });
   }
 
@@ -410,6 +501,27 @@ class _LoginState extends State<Login> {
     }
   }
 
+  _onForgotPasswordButtonPressed() {
+    var url = "http://localhost:8000/login/app_user/forgot_password";
+    try {
+      http
+          .post(Uri.parse(url),
+              body: jsonEncode(<String, String>{
+                'email': _mailControllerForgotPassword.text,
+              }))
+          .then((value) {
+        if (value.statusCode == 200) {
+          BridgeToast.showSuccessToastMessage(
+              "Yeni şifreniz mail adresinize gönderildi");
+        } else {
+          BridgeToast.showErrorToastMessage("Şifre sıfırlama işlemi başarısız");
+        }
+      });
+    } catch (e) {
+      BridgeToast.showErrorToastMessage("Bir hata oluştu");
+    }
+  }
+
   _onSignUpButtonPressed() async {
     const url = "http://localhost:8000/app_users";
     try {
@@ -433,7 +545,7 @@ class _LoginState extends State<Login> {
             _mailControllerSignUp.text = "";
             _isDisabled = false;
             _passwordControllerSignUp.text = "";
-            _isLogin = true;
+            _changeFormType(FormType.signIn);
           });
         } else if (value.statusCode == 400) {
           BridgeToast.showWarningToastMessage("Bu mail adresi zaten kayıtlı.");
