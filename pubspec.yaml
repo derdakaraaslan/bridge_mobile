@@ -84,10 +84,14 @@ flutter:
     - ./assets/images/slideimage4.png
     - ./assets/images/pagenotfound.png
     - ./assets/images/comingsoon.png
-    - ./assets/images/guzelkiz.jpg
     - ./assets/images/defaultProfilePhoto.jpg
     - ./assets/images/noImage.png
     - ./assets/images/92388_turkey_icon.png
+    - ./assets/images/avatar1.png
+    - ./assets/images/avatar2.png
+    - ./assets/images/avatar3.png
+    - ./assets/images/avatar4.png
+    - ./assets/images/avatar5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
