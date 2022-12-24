@@ -105,12 +105,6 @@ class _LoginState extends State<Login> {
                     width: 200,
                   ),
                 ],
-                // MediaQuery.of(context).size.width >= 1300 //Responsive
-                //     ? Image.asset(
-                //         'images/illustration-1.png',
-                //         width: 300,
-                //       )
-                //     : SizedBox(),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 50),

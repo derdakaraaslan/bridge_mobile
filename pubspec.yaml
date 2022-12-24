@@ -50,6 +50,10 @@ dependencies:
   get: ^4.6.5
   google_fonts: ^2.3.1
   footer: ^0.0.4
+  country_state_city_picker: ^1.2.8
+  csc_picker: ^0.2.6
+  country_icons: ^2.0.2
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +87,7 @@ flutter:
     - ./assets/images/guzelkiz.jpg
     - ./assets/images/defaultProfilePhoto.jpg
     - ./assets/images/noImage.png
+    - ./assets/images/92388_turkey_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
