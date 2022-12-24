@@ -42,60 +42,18 @@ class _CompanionState extends State<Companion> {
           children: [
             if (MediaQuery.of(context).size.width >= 1200) ...[
               const CustomDrawer(),
+              const SizedBox(
+                width: 210,
+              ),
             ],
-            Container(
-              padding: (MediaQuery.of(context).size.width >= 900)
-                  ? const EdgeInsets.all(50.0)
-                  : const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 350,
-                        width: 350,
-                        child: Center(
-                          child: FlutterLocationPicker(
-                              initZoom: 11,
-                              minZoomLevel: 5,
-                              maxZoomLevel: 16,
-                              trackMyPosition: true,
-                              searchBarBackgroundColor: Colors.white,
-                              mapLanguage: 'tr',
-                              onError: (e) => print(e),
-                              onPicked: (pickedData) {
-                                print(pickedData.latLong.latitude);
-                                print(pickedData.latLong.longitude);
-                                print(pickedData.address);
-                                print(pickedData.addressData['country']);
-                              }),
-                        ),
-                      ),
-                      Icon(Icons.arrow_right_alt_sharp, size: 100),
-                      Container(
-                        height: 350,
-                        width: 350,
-                        child: Center(
-                          child: FlutterLocationPicker(
-                              initZoom: 11,
-                              minZoomLevel: 5,
-                              maxZoomLevel: 16,
-                              trackMyPosition: true,
-                              searchBarBackgroundColor: Colors.white,
-                              mapLanguage: 'tr',
-                              onError: (e) => print(e),
-                              onPicked: (pickedData) {
-                                print(pickedData.latLong.latitude);
-                                print(pickedData.latLong.longitude);
-                                print(pickedData.address);
-                                print(pickedData.addressData['country']);
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: ConstrainedBox(
+            SingleChildScrollView(
+              child: Container(
+                padding: (MediaQuery.of(context).size.width >= 900)
+                    ? const EdgeInsets.all(50.0)
+                    : const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 340),
                       child: DateTimeField(
                         format: DateFormat("yyyy-MM-dd"),
@@ -116,8 +74,94 @@ class _CompanionState extends State<Companion> {
                         onShowPicker: _onDatePickerShown,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          height: 350,
+                          width: 350,
+                          child: Center(
+                            child: FlutterLocationPicker(
+                                initZoom: 11,
+                                minZoomLevel: 5,
+                                maxZoomLevel: 16,
+                                trackMyPosition: true,
+                                searchBarHintText: 'Nereden',
+                                searchBarBackgroundColor: Colors.white,
+                                mapLanguage: 'tr',
+                                onError: (e) => print(e),
+                                onPicked: (pickedData) {
+                                  print(pickedData.latLong.latitude);
+                                  print(pickedData.latLong.longitude);
+                                  print(pickedData.address);
+                                  print(pickedData.addressData['country']);
+                                }),
+                          ),
+                        ),
+                        Icon(Icons.arrow_right_alt_sharp, size: 100),
+                        Container(
+                          height: 350,
+                          width: 350,
+                          child: Center(
+                            child: FlutterLocationPicker(
+                                initZoom: 11,
+                                minZoomLevel: 5,
+                                maxZoomLevel: 16,
+                                trackMyPosition: true,
+                                searchBarBackgroundColor: Colors.white,
+                                searchBarHintText: 'Nereye',
+                                mapLanguage: 'tr',
+                                onError: (e) => print(e),
+                                onPicked: (pickedData) {
+                                  print(pickedData.latLong.latitude);
+                                  print(pickedData.latLong.longitude);
+                                  print(pickedData.address);
+                                  print(pickedData.addressData['country']);
+                                }),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 250,
+                          child: TextField(
+                            minLines: 6,
+                            maxLines: 8,
+                            controller: editingController3,
+                            decoration: const InputDecoration(
+                              labelText: 'Açıklama',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    TextButton(
+                      child: const Text('Gönder'),
+                      onPressed: () {
+                        print('Gönderildi');
+                        setState(() {
+                          text = editingController3.text;
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color.fromARGB(255, 222, 225, 228),
+                        elevation: 2,
+                        backgroundColor: Color.fromARGB(255, 128, 54, 118),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
