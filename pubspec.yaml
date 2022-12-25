@@ -53,6 +53,7 @@ dependencies:
   location_picker_flutter_map: ^1.1.5
   datetime_picker_formfield: ^2.0.1
   date_format: ^2.0.7
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

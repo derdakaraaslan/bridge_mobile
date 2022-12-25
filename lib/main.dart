@@ -11,8 +11,9 @@ import 'routes.dart';
 import 'package:oktoast/oktoast.dart';
 
 void main() async {
-  GetIt.I.registerSingletonAsync<SimpleStorage>(SimpleStorage.create);
   WidgetsFlutterBinding.ensureInitialized();
+  GetIt.I.registerSingletonAsync<SimpleStorage>(SimpleStorage.create);
+  await GetIt.I.allReady();
   runApp(const BridgeApp());
 }
 
