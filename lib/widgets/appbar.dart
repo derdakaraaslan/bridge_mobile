@@ -9,6 +9,13 @@ import '../routes.dart';
 class BridgeAppBar {
   static PreferredSizeWidget appbar(BuildContext context) {
     final _storageService = GetIt.I.get<SimpleStorage>();
+    final avatars = [
+      "../assets/images/avatar1.png",
+      "../assets/images/avatar2.png",
+      "../assets/images/avatar3.png",
+      "../assets/images/avatar4.png",
+      "../assets/images/avatar5.png"
+    ];
     return AppBar(
       iconTheme: IconThemeData(color: Colors.black),
       backgroundColor: Colors.white,
@@ -45,12 +52,13 @@ class BridgeAppBar {
                       },
                       icon: ClipOval(
                         child: SizedBox.fromSize(
-                            size: Size.fromRadius(48), // Image radius
-                            child: (_storageService.profilePhoto == null)
-                                ? Image.asset(
-                                    "../assets/images/defaultProfilePhoto.jpg",
-                                    fit: BoxFit.cover)
-                                : _storageService.getProfilePhoto()),
+                          size: Size.fromRadius(48), // Image radius
+                          child: Image.asset(
+                              avatars[
+                                  int.parse(_storageService.avatar_id!) - 1],
+                              width: 300,
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     )
                   ],

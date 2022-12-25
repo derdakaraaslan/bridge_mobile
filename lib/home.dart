@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:bridge_mobile/routes.dart';
 import 'package:flutter/material.dart';
+import 'globals/desing.dart';
 import 'globals/simple_storage.dart';
 import './drawer/custom_drawer.dart';
 import 'widgets/appbar.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,6 +18,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _storageService = GetIt.I.get<SimpleStorage>();
+  final avatars = [
+    "../assets/images/avatar1.png",
+    "../assets/images/avatar2.png",
+    "../assets/images/avatar3.png",
+    "../assets/images/avatar4.png",
+    "../assets/images/avatar5.png"
+  ];
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,10 +86,19 @@ class _HomeState extends State<Home> {
 
   List<Widget> _getChildren() {
     return [
-      _storageService.getProfilePhoto(width: 240),
-      const SizedBox(
-        width: 50,
-        height: 50,
+      Column(
+        children: [
+          Image.asset(
+            avatars[int.parse(_storageService.avatar_id!) - 1],
+            width: 300,
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: _onChangeAvatarButtonPressed,
+            child: Text("Avatarı değiştir",
+                style: TextStyle(color: BridgeColors.primaryColor)),
+          ),
+        ],
       ),
       Row(
         children: [
@@ -143,5 +169,28 @@ class _HomeState extends State<Home> {
         ],
       ),
     ];
+  }
+
+  _onChangeAvatarButtonPressed() {
+    const url = "http://localhost:8000/app_users/change_avatar";
+    try {
+      http
+          .post(
+        Uri.parse(url),
+        body: jsonEncode(<String, String>{'id': _storageService.id ?? ""}),
+      )
+          .then((value) async {
+        if (value.statusCode == 200) {
+          var responseBody = jsonDecode(value.body);
+          setState(() {
+            _storageService.avatar_id = responseBody["message"];
+          });
+
+          BridgeToast.showSuccessToastMessage("Avatar değiştirildi");
+        }
+      });
+    } catch (e) {
+      BridgeToast.showErrorToastMessage("Bir hata oluştu");
+    }
   }
 }

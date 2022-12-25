@@ -55,6 +55,14 @@ class SimpleStorage {
     _boolSetter("isDisabled", isDisabled);
   }
 
+  String? get avatar_id {
+    return _stringGetter("avatar_id");
+  }
+
+  set avatar_id(String? avatar_id) {
+    _stringSetter("avatar_id", avatar_id);
+  }
+
   Widget getProfilePhoto({double? width}) {
     if (profilePhoto == null) {
       return Image.asset("../../assets/images/defaultProfilePhoto.jpg",
