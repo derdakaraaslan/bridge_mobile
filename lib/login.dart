@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'globals/simple_storage.dart';
 import 'routes.dart';
+import 'globals/constants.dart';
 
 enum FormType {
   signIn,
@@ -464,7 +465,7 @@ class _LoginState extends State<Login> {
   }
 
   _onSignInButtonPressed() {
-    const url = "http://localhost:8000/login/app_user";
+    var url = "${globalUrl}login/app_user";
     try {
       http
           .post(
@@ -496,7 +497,7 @@ class _LoginState extends State<Login> {
   }
 
   _onForgotPasswordButtonPressed() {
-    var url = "http://localhost:8000/login/app_user/forgot_password";
+    var url = "${globalUrl}login/app_user/forgot_password";
     try {
       http
           .post(Uri.parse(url),
@@ -517,7 +518,7 @@ class _LoginState extends State<Login> {
   }
 
   _onSignUpButtonPressed() async {
-    const url = "http://localhost:8000/app_users";
+    var url = "${globalUrl}app_users";
     try {
       http
           .post(

@@ -64,7 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 title: 'Refakatçi Talebi',
                 infoCount: 0,
                 clearDatas: false,
-                location: Routes.comingSoon,
+                location: Routes.companion,
               ),
 
               CustomListTile(

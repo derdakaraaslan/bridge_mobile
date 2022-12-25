@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'globals/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'globals/simple_storage.dart';
@@ -162,8 +162,8 @@ class _EquipmentState extends State<Equipment> {
     );
   }
 
-  _getRows({Map? filter}) {
-    const url = "http://localhost:8000/equipment_help/search";
+  List<Container> _getRows() {
+    final url = "${globalUrl}equipment_help/search";
     try {
       http
           .post(
