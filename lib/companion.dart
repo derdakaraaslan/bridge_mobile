@@ -25,6 +25,7 @@ class _CompanionState extends State<Companion> {
   late DateTime _selectedDate;
   final _dateController = TextEditingController();
   final TextEditingController _commetController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   double? _startLat;
   double? _startLng;
 
@@ -70,7 +71,6 @@ class _CompanionState extends State<Companion> {
                           decoration:
                               InputDecoration(hintText: "Tarih Saat Seçiniz"),
                           onShowPicker: _onShowDateTimePicker,
-                          // ignore: prefer-extracting-callbacks
                           validator: (value) {
                             if (value == null) {
                               return 'Lütfen bir tarih seçiniz';
@@ -103,6 +103,21 @@ class _CompanionState extends State<Companion> {
                       ),
                       const SizedBox(
                         height: 50,
+                      ),
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width >= 900)
+                            ? 800
+                            : 350,
+                        child: TextField(
+                          controller: _titleController,
+                          decoration: const InputDecoration(
+                            labelText: 'Başlık',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       SizedBox(
                         width: (MediaQuery.of(context).size.width >= 900)
@@ -167,6 +182,7 @@ class _CompanionState extends State<Companion> {
           "finish_latitude": _finishLat.toString(),
           "finish_longitude": _finishLng.toString(),
           "comment": _commetController.text,
+          "title": _titleController.text,
         }),
       )
           .then((value) {
@@ -234,11 +250,10 @@ class _CompanionState extends State<Companion> {
     DateTime? _,
   ) async {
     final date = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      initialDate: DateTime.now(),
-      lastDate: DateTime.now(),
-    );
+        context: context,
+        firstDate: DateTime.now(),
+        initialDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 90)));
     if (date == null) {
       return null;
     }
@@ -249,24 +264,5 @@ class _CompanionState extends State<Companion> {
     );
 
     return DateTimeField.combine(date, time);
-  }
-
-  Widget getMap() {
-    String address;
-    return Center(
-      child: FlutterLocationPicker(
-          initZoom: 11,
-          minZoomLevel: 5,
-          maxZoomLevel: 16,
-          trackMyPosition: true,
-          searchBarBackgroundColor: Colors.white,
-          mapLanguage: 'ar',
-          onError: (e) => print(e),
-          onPicked: (pickedData) {
-            lat = pickedData.latLong.latitude;
-            lng = pickedData.latLong.longitude;
-            address = pickedData.address;
-          }),
-    );
   }
 }

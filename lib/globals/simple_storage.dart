@@ -63,13 +63,16 @@ class SimpleStorage {
     _stringSetter("avatar_id", avatarId);
   }
 
-  Widget getProfilePhoto({double? width}) {
-    if (profilePhoto == null) {
-      return Image.asset("../../assets/images/defaultProfilePhoto.jpg",
-          fit: BoxFit.cover, width: width);
-    }
-    Uint8List bytes = base64Decode(profilePhoto!);
-    return Image.memory(bytes, width: width);
+  final _avatars = [
+    "../assets/images/avatar1.png",
+    "../assets/images/avatar2.png",
+    "../assets/images/avatar3.png",
+    "../assets/images/avatar4.png",
+    "../assets/images/avatar5.png"
+  ];
+
+  String getAvatarAsset({String? newAvatarId}) {
+    return _avatars[int.parse(newAvatarId ?? avatarId!) - 1];
   }
 
   clearDatas() {

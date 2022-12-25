@@ -94,14 +94,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 title: 'Refakatçi Ol',
                 infoCount: 0,
                 clearDatas: false,
-                location: Routes.comingSoon,
+                location: Routes.companionList,
               ),
               CustomListTile(
                 icon: Icons.how_to_reg_outlined,
                 title: 'Ekipman Yardımı Yap',
                 infoCount: 0,
                 clearDatas: false,
-                location: Routes.comingSoon,
+                location: Routes.provideEquipment,
               ),
 
               CustomListTile(

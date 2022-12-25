@@ -9,13 +9,6 @@ import '../routes.dart';
 class BridgeAppBar {
   static PreferredSizeWidget appbar(BuildContext context) {
     final _storageService = GetIt.I.get<SimpleStorage>();
-    final avatars = [
-      "../assets/images/avatar1.png",
-      "../assets/images/avatar2.png",
-      "../assets/images/avatar3.png",
-      "../assets/images/avatar4.png",
-      "../assets/images/avatar5.png"
-    ];
     return AppBar(
       iconTheme: IconThemeData(color: Colors.black),
       backgroundColor: Colors.white,
@@ -23,16 +16,29 @@ class BridgeAppBar {
       title: Stack(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Bridge",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 70,
-                ),
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                "../../assets/images/logo.png",
+                height: 90,
               ),
             ],
+          ),
+          Container(
+            height: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Bridge ile engelleri birlikte aşalım!",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
           ),
           (MediaQuery.of(context).size.width >= 900)
               ? Row(
@@ -53,10 +59,8 @@ class BridgeAppBar {
                       icon: ClipOval(
                         child: SizedBox.fromSize(
                           size: Size.fromRadius(48), // Image radius
-                          child: Image.asset(
-                              avatars[int.parse(_storageService.avatarId!) - 1],
-                              width: 300,
-                              fit: BoxFit.cover),
+                          child: Image.asset(_storageService.getAvatarAsset(),
+                              width: 300, fit: BoxFit.cover),
                         ),
                       ),
                     )

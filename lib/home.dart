@@ -18,13 +18,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _storageService = GetIt.I.get<SimpleStorage>();
-  final avatars = [
-    "../assets/images/avatar1.png",
-    "../assets/images/avatar2.png",
-    "../assets/images/avatar3.png",
-    "../assets/images/avatar4.png",
-    "../assets/images/avatar5.png"
-  ];
   @override
   void initState() {
     super.initState();
@@ -89,7 +82,7 @@ class _HomeState extends State<Home> {
       Column(
         children: [
           Image.asset(
-            avatars[int.parse(_storageService.avatarId!) - 1],
+            _storageService.getAvatarAsset(),
             width: 300,
           ),
           const SizedBox(height: 20),

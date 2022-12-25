@@ -9,6 +9,8 @@ import 'coming_soon.dart';
 import 'pagenotfound.dart';
 import 'equipment.dart';
 import 'companion.dart';
+import 'companion_list.dart';
+import 'provide_equipment.dart';
 
 // ignore: long-method
 GoRouter routerGenerator() {
@@ -69,6 +71,20 @@ GoRouter routerGenerator() {
           child: Companion(),
         ),
       ),
+      GoRoute(
+        path: Routes.companionList,
+        name: 'Companion List',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: CompanionList(),
+        ),
+      ),
+      GoRoute(
+        path: Routes.provideEquipment,
+        name: 'Provide Equipment',
+        pageBuilder: (_, __) => const NoTransitionPage(
+          child: ProvideEquipment(),
+        ),
+      ),
     ],
   );
 }
@@ -79,6 +95,8 @@ abstract class Routes {
   static const login = '/login';
   static const equipment = '/equipment';
   static const companion = '/companion';
+  static const companionList = '/companionlist';
+  static const provideEquipment = '/provideEquipment';
   static const start = '/';
 }
 
