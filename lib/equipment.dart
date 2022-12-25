@@ -269,10 +269,10 @@ class _EquipmentState extends State<Equipment> {
           );
           _onDetailButtonPressed();
         },
-        titleTextStyle: TextStyle(
-          fontSize: 24,
-          color: Colors.black,
-        ),
+        // titleTextStyle: TextStyle(
+        //   fontSize: 24,
+        //   color: Colors.black,
+        // ),
         trailing: Text(shareDate ?? ""),
         title: Text(title ?? ""),
         leading: icon,

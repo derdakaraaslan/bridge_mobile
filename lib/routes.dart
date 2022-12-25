@@ -8,7 +8,7 @@ import 'home.dart';
 import 'coming_soon.dart';
 import 'pagenotfound.dart';
 import 'equipment.dart';
-import 'companion.dart';
+import 'companionmap.dart';
 
 // ignore: long-method
 GoRouter routerGenerator() {
