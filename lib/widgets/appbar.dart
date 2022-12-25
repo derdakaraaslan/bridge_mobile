@@ -54,8 +54,7 @@ class BridgeAppBar {
                         child: SizedBox.fromSize(
                           size: Size.fromRadius(48), // Image radius
                           child: Image.asset(
-                              avatars[
-                                  int.parse(_storageService.avatar_id!) - 1],
+                              avatars[int.parse(_storageService.avatarId!) - 1],
                               width: 300,
                               fit: BoxFit.cover),
                         ),
