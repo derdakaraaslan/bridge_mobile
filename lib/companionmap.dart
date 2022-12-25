@@ -1,3 +1,7 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'dart:async';
+
 import 'package:bridge_mobile/globals/desing.dart';
 import 'package:flutter/material.dart';
 import 'globals/simple_storage.dart';
@@ -5,16 +9,7 @@ import './drawer/custom_drawer.dart';
 import 'widgets/appbar.dart';
 import 'package:get_it/get_it.dart';
 
-import 'dart:html';
-
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
-import 'package:intl/intl.dart';
-import 'package:google_maps/google_maps.dart';
-import 'dart:ui' as ui;
-import 'package:http/http.dart' as http;
-import 'globals/constants.dart';
-import 'dart:convert';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Companion extends StatefulWidget {
   const Companion({Key? key}) : super(key: key);
@@ -23,15 +18,17 @@ class Companion extends StatefulWidget {
   State<Companion> createState() => _CompanionState();
 }
 
+var lat = 39.925533;
+var lng = 32.866287;
+final myLatlng = LatLng(lat, lng);
+
 class _CompanionState extends State<Companion> {
-  final _storageService = GetIt.I.get<SimpleStorage>();
-  final TextEditingController _commetController = TextEditingController();
-  double? _startLat;
-  double? _startLng;
+  final Completer<GoogleMapController> _controller = Completer();
 
-  double? _finishLat;
-  double? _finishLng;
-
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: myLatlng,
+    zoom: 14.4746,
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +61,13 @@ class _CompanionState extends State<Companion> {
                         alignment: Alignment.center,
                         width: 800,
                         height: 350,
-                        child: _getMap(),
+                        child: GoogleMap(
+                          mapType: MapType.hybrid,
+                          initialCameraPosition: _kGooglePlex,
+                          onMapCreated: (GoogleMapController controller) {
+                            _controller.complete(controller);
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 50,
@@ -105,65 +108,29 @@ class _CompanionState extends State<Companion> {
   }
 
   _onCreateRequestButtonPressed() {
-    var url = "${globalUrl}companion_request/create";
-    try {
-      http
-          .post(
-        Uri.parse(url),
-        body: jsonEncode(<String, Object>{
-          "owner": {"id": _storageService.id},
-          "start_latitude": _startLat.toString(),
-          "start_longitude": _startLng.toString(),
-          "finish_latitude": _finishLat.toString(),
-          "finish_longitude": _finishLng.toString(),
-          "comment": _commetController.text,
-        }),
-      )
-          .then((value) {
-        if (value.statusCode == 200) {
-          BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
-        } else {
-          BridgeToast.showErrorToastMessage(value.body);
-        }
-      });
-    } catch (e) {
-      BridgeToast.showErrorToastMessage("Bir hata oluştu, kayıt başarısız.");
-    }
-  }
-
-  Widget _getMap() {
-    var lat = 39.925533;
-    var lng = 32.866287;
-    String htmlId = "2";
-
-    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
-      final myLatlng = LatLng(lat, lng);
-      final myLatlng2 = LatLng(39.825533, 32.866287);
-
-      final mapOptions = MapOptions()
-        ..zoom = 10
-        ..center = LatLng(lat, lng);
-
-      final elem = DivElement()
-        ..id = htmlId
-        ..style.width = "100%"
-        ..style.height = "100%"
-        ..style.border = 'none';
-
-      final map = GMap(elem, mapOptions);
-
-      Marker(MarkerOptions()
-        ..position = myLatlng
-        ..map = map
-        ..title = 'nereden');
-      Marker(MarkerOptions()
-        ..position = myLatlng2
-        ..map = map
-        ..title = 'nereye');
-
-      return elem;
-    });
-
-    return HtmlElementView(viewType: htmlId);
+    // var url = "${globalUrl}companion_request/create";
+    // try {
+    //   http
+    //       .post(
+    //     Uri.parse(url),
+    //     body: jsonEncode(<String, Object>{
+    //       "owner": {"id": _storageService.id},
+    //       "start_latitude": _startLat.toString(),
+    //       "start_longitude": _startLng.toString(),
+    //       "finish_latitude": _finishLat.toString(),
+    //       "finish_longitude": _finishLng.toString(),
+    //       "comment": _commetController.text,
+    //     }),
+    //   )
+    //       .then((value) {
+    //     if (value.statusCode == 200) {
+    //       BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
+    //     } else {
+    //       BridgeToast.showErrorToastMessage(value.body);
+    //     }
+    //   });
+    // } catch (e) {
+    //   BridgeToast.showErrorToastMessage("Bir hata oluştu, kayıt başarısız.");
+    // }
   }
 }

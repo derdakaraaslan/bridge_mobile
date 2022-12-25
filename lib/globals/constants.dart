@@ -1,2 +1,2 @@
-String globalUrl = "http://localhost:8000/";
-//String globalUrl = "http://10.42.0.1:8000/";
+//String globalUrl = "http://localhost:8000/";
+String globalUrl = "http://192.168.1.121:8000/";

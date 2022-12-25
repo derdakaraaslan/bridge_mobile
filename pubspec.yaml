@@ -59,6 +59,9 @@ dependencies:
   date_format: ^2.0.7
   permission_handler: ^10.2.0
   google_maps: ^6.2.0
+  google_maps_flutter_platform_interface: ^2.2.4
+  google_maps_flutter_android: ^2.4.0
+  google_maps_flutter: ^2.2.2
 
 dev_dependencies:
   flutter_test:
