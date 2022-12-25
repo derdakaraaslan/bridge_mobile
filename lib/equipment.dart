@@ -162,7 +162,7 @@ class _EquipmentState extends State<Equipment> {
     );
   }
 
-  List<Container> _getRows() {
+  _getRows({Map? filter}) {
     final url = "${globalUrl}equipment_help/search";
     try {
       http
