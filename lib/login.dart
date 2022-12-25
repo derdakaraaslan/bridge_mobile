@@ -474,16 +474,18 @@ class _LoginState extends State<Login> {
           'password': _passwordControllerSignIn.text,
         }),
       )
-          .then((value) async {
+          .then((value) {
         if (value.statusCode == 200) {
           var responseBody = jsonDecode(value.body);
 
+          _storageService.avatarId = responseBody["avatar_id"].toString();
           _storageService.id = responseBody["id"];
           _storageService.profilePhoto = responseBody["profile_photo"];
           _storageService.firstName = responseBody["first_name"];
           _storageService.lastName = responseBody["last_name"];
           _storageService.email = responseBody["email"];
           _storageService.isDisabled = responseBody["is_disabled"];
+
           BridgeToast.showSuccessToastMessage("Giriş başarılı");
           context.go(Routes.home);
         } else {

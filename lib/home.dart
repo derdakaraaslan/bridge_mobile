@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
       Column(
         children: [
           Image.asset(
-            avatars[int.parse(_storageService.avatar_id!) - 1],
+            avatars[int.parse(_storageService.avatarId!) - 1],
             width: 300,
           ),
           const SizedBox(height: 20),
@@ -183,7 +183,7 @@ class _HomeState extends State<Home> {
         if (value.statusCode == 200) {
           var responseBody = jsonDecode(value.body);
           setState(() {
-            _storageService.avatar_id = responseBody["message"];
+            _storageService.avatarId = responseBody["message"];
           });
 
           BridgeToast.showSuccessToastMessage("Avatar değiştirildi");

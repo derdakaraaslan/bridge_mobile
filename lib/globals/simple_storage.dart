@@ -55,12 +55,12 @@ class SimpleStorage {
     _boolSetter("isDisabled", isDisabled);
   }
 
-  String? get avatar_id {
+  String? get avatarId {
     return _stringGetter("avatar_id");
   }
 
-  set avatar_id(String? avatar_id) {
-    _stringSetter("avatar_id", avatar_id);
+  set avatarId(String? avatarId) {
+    _stringSetter("avatar_id", avatarId);
   }
 
   Widget getProfilePhoto({double? width}) {
