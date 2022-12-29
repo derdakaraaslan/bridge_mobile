@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'globals/constants.dart';
 import 'dart:convert';
+import 'dart:io';
 
 class Companion extends StatefulWidget {
   const Companion({Key? key}) : super(key: key);
@@ -171,8 +172,7 @@ class _CompanionState extends State<Companion> {
   _onCreateRequestButtonPressed() {
     var url = "${globalUrl}companion_request/create";
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Object>{
           "owner": {"id": _storageService.id},
@@ -184,8 +184,10 @@ class _CompanionState extends State<Companion> {
           "comment": _commetController.text,
           "title": _titleController.text,
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
         } else {

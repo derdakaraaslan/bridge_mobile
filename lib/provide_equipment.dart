@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'globals/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,8 @@ class _ProvideEquipmentState extends State<ProvideEquipment> {
     // TODO: implement initState
 
     super.initState();
-    _onNewAdvertButtonPressed();
+
+    _getEquipmentsType();
   }
 
   @override
@@ -86,11 +88,10 @@ class _ProvideEquipmentState extends State<ProvideEquipment> {
   }
 
   _onNewAdvertConfirmButtonPressed() {
-    const url = "http://localhost:8000/equipment_help/create";
+    var url = "${globalUrl}equipment_help/create";
 
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Object>{
           'owner': {"id": _storageService.id ?? ""},
@@ -99,8 +100,10 @@ class _ProvideEquipmentState extends State<ProvideEquipment> {
           "equipment_id": equipmentsTypeMap[dropdownValue] ?? "",
           "phone_numner": _phoneController.text,
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
           initState();
@@ -111,6 +114,37 @@ class _ProvideEquipmentState extends State<ProvideEquipment> {
     } catch (e) {
       BridgeToast.showErrorToastMessage("Bir hata oluştu, kayıt başarısız.");
     }
+  }
+
+  _getEquipmentsType() {
+    var url = "${globalUrl}equipment_type/search";
+    equipmentsTypeList = [];
+    try {
+      http.post(
+        Uri.parse(url),
+        body: jsonEncode(<String, Map>{
+          "filter": {},
+        }),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            var responseBody = jsonDecode(value.body);
+            for (var element in responseBody) {
+              equipmentsTypeList.add(element["name"]);
+              equipmentsTypeMap.addAll({element["name"]: element["id"]});
+            }
+            _onNewAdvertButtonPressed();
+          });
+        }
+      });
+    } catch (e) {
+      BridgeToast.showErrorToastMessage("Bir hata oluştu.");
+    }
+
+    return [];
   }
 
   Widget _formNewAdvert() {

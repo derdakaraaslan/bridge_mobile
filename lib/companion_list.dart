@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 
 import 'globals/constants.dart';
@@ -46,9 +47,10 @@ class _CompanionState extends State<CompanionList> {
     // TODO: implement initState
     equipmentTypeButtons = [];
     if (selectedEqipment != null) {
-      _getRows(filter: {"equipment__name": selectedEqipment});
+      _getRows(
+          filter: {"equipment__name": selectedEqipment, "is_active": true});
     } else {
-      _getRows();
+      _getRows(filter: {"is_active": true});
     }
     super.initState();
   }
@@ -114,14 +116,15 @@ class _CompanionState extends State<CompanionList> {
   _getRows({Map? filter}) {
     final url = "${globalUrl}companion_request/search";
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Map>{
           "filter": filter ?? {},
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           rows = [];
 

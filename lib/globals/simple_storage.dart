@@ -63,6 +63,14 @@ class SimpleStorage {
     _stringSetter("avatar_id", avatarId);
   }
 
+  String? get apiToken {
+    return _stringGetter("api_token");
+  }
+
+  set apiToken(String? apiToken) {
+    _stringSetter("api_token", apiToken);
+  }
+
   final _avatars = [
     "../assets/images/avatar1.png",
     "../assets/images/avatar2.png",

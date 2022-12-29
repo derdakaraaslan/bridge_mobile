@@ -486,8 +486,7 @@ class _LoginState extends State<Login> {
           _storageService.lastName = responseBody["last_name"];
           _storageService.email = responseBody["email"];
           _storageService.isDisabled = responseBody["is_disabled"];
-
-          BridgeToast.showSuccessToastMessage("Giriş başarılı");
+          _storageService.apiToken = responseBody["token"];
           context.go(Routes.home);
         } else {
           BridgeToast.showErrorToastMessage("Hatalı şifre ya da mail adresi.");

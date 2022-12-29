@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'globals/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,9 +42,10 @@ class _EquipmentState extends State<Equipment> {
     // TODO: implement initState
     equipmentTypeButtons = [];
     if (selectedEqipment != null) {
-      _getRows(filter: {"equipment__name": selectedEqipment});
+      _getRows(
+          filter: {"equipment__name": selectedEqipment, "is_active": true});
     } else {
-      _getRows();
+      _getRows(filter: {"is_active": true});
     }
     _getEquipmentsType();
     super.initState();
@@ -165,14 +167,15 @@ class _EquipmentState extends State<Equipment> {
   _getRows({Map? filter}) {
     final url = "${globalUrl}equipment_help/search";
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Map>{
           "filter": filter ?? {},
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           rows = [];
 
@@ -197,17 +200,18 @@ class _EquipmentState extends State<Equipment> {
   }
 
   _getEquipmentsType() {
-    const url = "http://localhost:8000/equipment_type/search";
+    var url = "${globalUrl}equipment_type/search";
     equipmentsTypeList = [];
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Map>{
           "filter": {},
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           setState(() {
             var responseBody = jsonDecode(value.body);
@@ -320,11 +324,10 @@ class _EquipmentState extends State<Equipment> {
   }
 
   _onNewAdvertConfirmButtonPressed() {
-    const url = "http://localhost:8000/equipment_help/create";
+    var url = "${globalUrl}equipment_help/create";
 
     try {
-      http
-          .post(
+      http.post(
         Uri.parse(url),
         body: jsonEncode(<String, Object>{
           'owner': {"id": _storageService.id ?? ""},
@@ -333,8 +336,10 @@ class _EquipmentState extends State<Equipment> {
           "equipment_id": equipmentsTypeMap[dropdownValue] ?? "",
           "phone_numner": _phoneController.text,
         }),
-      )
-          .then((value) {
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
+        },
+      ).then((value) {
         if (value.statusCode == 200) {
           BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
           initState();

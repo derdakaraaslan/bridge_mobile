@@ -15,14 +15,19 @@ class BridgeAppBar {
       toolbarHeight: 100,
       title: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset(
-                "../../assets/images/logo.png",
-                height: 90,
-              ),
-            ],
+          Container(
+            height: 100,
+            child: Row(
+              mainAxisAlignment: (MediaQuery.of(context).size.width >= 900)
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "../../assets/images/logo.png",
+                  height: 90,
+                ),
+              ],
+            ),
           ),
           Container(
             height: 100,
@@ -30,13 +35,15 @@ class BridgeAppBar {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Bridge ile engelleri birlikte aşalım!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                )
+                (MediaQuery.of(context).size.width >= 900)
+                    ? Text(
+                        "Bridge ile engelleri birlikte aşalım!",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                        ),
+                      )
+                    : SizedBox(),
               ],
             ),
           ),
