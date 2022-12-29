@@ -403,7 +403,7 @@ class _HomeState extends State<Home> {
               var date = DateTime.parse(element["date"]);
               var strDate =
                   "${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute}";
-              if (companionRows.length < 5) {
+              if (companionRows.length < 4) {
                 companionRows.add(_getContainerRow(
                   "${globalUrl}companion_request/${element["id"]}",
                   date: strDate,
@@ -439,7 +439,7 @@ class _HomeState extends State<Home> {
             for (var element in responseBody) {
               var date = DateTime.parse(element["share_date"]);
               var strDate = "${date.day}/${date.month}/${date.year}";
-              if (equipmentRows.length < 5) {
+              if (equipmentRows.length < 4) {
                 equipmentRows.add(_getContainerRow(
                   "${globalUrl}equipment_help/${element["id"]}",
                   date: strDate,

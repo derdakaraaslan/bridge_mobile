@@ -33,8 +33,6 @@ class _EquipmentState extends State<Equipment> {
   final _commentController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  String? _selectedRowId;
-
   Map<String, String> _selectedRow = {};
 
   @override
@@ -48,6 +46,20 @@ class _EquipmentState extends State<Equipment> {
       _getRows(filter: {"is_active": true});
     }
     _getEquipmentsType();
+    rows = [];
+    equipmentTypeButtons = [];
+    newEquipmentHelp = Container();
+    detail = Container();
+    dropdownValue = 'Diğer';
+
+    equipmentsTypeList = [];
+    equipmentsTypeMap = {};
+    selectedEqipment;
+    _titleController.text = "";
+    _commentController.text = "";
+    _phoneController.text = "";
+
+    Map<String, String> _selectedRow = {};
     super.initState();
   }
 
@@ -334,15 +346,15 @@ class _EquipmentState extends State<Equipment> {
           'title': _titleController.text,
           'comment': _commentController.text,
           "equipment_id": equipmentsTypeMap[dropdownValue] ?? "",
-          "phone_numner": _phoneController.text,
+          "phone_number": _phoneController.text,
         }),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer ${_storageService.apiToken}',
         },
       ).then((value) {
         if (value.statusCode == 200) {
-          BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
           initState();
+          BridgeToast.showSuccessToastMessage("Kayıt başarıyla yapıldı.");
         } else {
           BridgeToast.showErrorToastMessage(value.body);
         }
